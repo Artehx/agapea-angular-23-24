@@ -1,0 +1,21 @@
+<div class="container">
+    <div class="row m-3">
+        <div class="col"><h3><strong>Mi Biblioteca</strong></h3></div>
+    </div>
+
+    <div class="row m-3">
+        <div class="col"><button class="btn btn-primary btn-lg" style="border-radius: 0px" data-bs-toggle="modal" data-bs-target="#crearlistamodal">Crear una nueva lista</button></div>
+    </div>
+
+    <div class="row">
+        @for (list of (clientLists$ | async); track list.idList) {
+            <div class="col-4">
+             
+            <app-minilista [listToPaint]="list"></app-minilista>
+
+            </div>
+        }
+
+    </div>
+    <app-modalcrearlista [list]="list" (createList)="sendListForBack()"></app-modalcrearlista>
+</div>

@@ -1,0 +1,40 @@
+<div class="container">
+    <div class="row">
+        @for (unlibro of this.listaLibros$ | async ; track unlibro.ISBN13) {
+            <div class="col-4">
+                <app-minilibro [libroAPintar]="unlibro"></app-minilibro>
+            </div>
+        }
+        @empty {
+                <div class="col">
+                    <p>No se han encontrado LIBROS de esa categoria...intantalo de nuevo con otra</p>
+                </div>
+        }    
+    </div>
+</div>
+
+<!-- 
+    modificar vista usando:
+            *ngIf...; else <----- @if(){ ..} @else {... }
+            *ngFor... <---------- @for( ... ) { ...} <==== usar observable libros con async
+
+
+<div class="container">
+    <div class="row" *ngIf="this.listaLibros.length !==0; else sinlibros">
+        <div class="row">
+                <div class="col-4" *ngFor="let unlibro of this.listaLibros">
+                    <app-minilibro [libroAPintar]="unlibro"></app-minilibro>
+                </div>
+        </div>
+    </div>
+    
+    <ng-template #sinlibros>
+        <div class="row">
+            <div class="col">
+                <p>No se han encontrado LIBROS de esa categoria...intantalo de nuevo con otra</p>
+            </div>
+        </div>
+    </ng-template>
+</div>
+
+-->

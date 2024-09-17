@@ -1,0 +1,19 @@
+div.reg-edit-list {
+    display:block;
+    margin-bottom: 40px;
+    border: 1px solid #e3e3e3;
+    border-radius: 2px;
+    box-shadow: 5px 5px 10px -8px #ccc;
+    position: relative;
+    top: 20px;
+
+}
+
+.reg-edit-list h3 {
+    margin-top: 0;
+    padding: 10px 20px;
+    background-color: #f0f0f0;
+    color: #00679f;
+    font-size: 1rem;
+    line-height: 1.3rem;
+}

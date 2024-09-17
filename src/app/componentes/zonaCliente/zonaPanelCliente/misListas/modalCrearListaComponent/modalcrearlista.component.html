@@ -1,0 +1,28 @@
+  <!-- Modal -->
+  <div class="modal fade" id="crearlistamodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel"><strong>Nueva Lista</strong></h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="m-3">
+                  <label for="nombreLista" class="form-label">Nombre</label>
+                  <input type="text" class="form-control" id="name" name="name" value="" [(ngModel)]="list.name">
+                </div>
+                
+                <div class="m-3">
+                  <label for="descripcionLista" class="form-label">Descripcion</label>
+                  <textarea class="form-control" id="description" name="description" value="...aqui descripcion de la lista..." rows="3" [(ngModel)]="list.description"></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal" (click)="createNewList()">Crear lista</button>
+        </div>
+      </div>
+    </div>
+  </div>
+

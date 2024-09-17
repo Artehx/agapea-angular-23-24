@@ -1,0 +1,31 @@
+    <!-- panel de opciones del cliente -->
+
+    <h6 class="text-dark mt-4 ms-3">PANEL PERSONAL DEL CLIENTE</h6>
+    <div class="container">
+        <!-- fila con imagen cliente y nombre y email de bienvenida-->
+        <div class="row" style="background:#ededed;">
+            <div class="col text-center">
+                <img [src]="this.cliente.cuenta.imagenAvatarBASE64 || '../../../../assets/images/imagen_usuario_sinavatar.jpg'" style="width:115px; height:140px;"/>
+            </div>
+        </div>
+    
+            <div class="row" style="background:#ededed;">
+            <div class="col">
+                <p class="text-muted"><small>Bienvenido {{this.cliente.nombre}} {{this.cliente.apellidos}} ( {{this.cliente.cuenta.email}} )</small></p>
+            </div>
+        </div>
+    
+        <!-- fila con opciones panel cliente-->
+        <div class="row">
+            <div class="col">
+                <div class="list-group">
+                        <a *ngFor="let opcion of this.listaOpciones"
+                            [routerLink]="['/Cliente/Panel/', opcion.replace(' ','')]" routerLinkActive="router-link-active"  
+                            class="list-group-item list-group-item-action border border-end-0 border-start-0 text-dark">
+                            {{opcion}}
+                        </a>
+    
+                </div>
+            </div>
+        </div>
+    </div>

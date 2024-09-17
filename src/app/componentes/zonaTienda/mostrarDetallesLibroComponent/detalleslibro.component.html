@@ -1,0 +1,191 @@
+
+@if ( this.libro$ | async; as libro) {
+    <div class="row">
+        <div class="col-8">
+            <div class="mb-3" style="max-width: 540px;">
+                <div class="row g-0">
+                    <div class="col-md-4" style="height: 170px">
+                        <div class="container">
+                            <div class="row">
+                                <div class="w-100" style="height: 80%">
+                                    <img [src]="this.libro.ImagenLibroBASE64" class="img-fluid rounded-start" alt="...">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <a class="btn btn-primary btn-sm mt-3" style="visibility: visible;">Comprar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8 ps-1">
+                        <div class="ms-3">
+                            <h5 class="card-title">{{this.libro.Titulo}}</h5>
+                            <h6 class="card-text">{{this.libro.Autores}}</h6>
+                            <hr />
+                            <h6>Detalles del libro</h6>
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="card-text text-muted">Editorial</div>
+                                    <div class="card-text text-muted">Edición</div>
+                                    <div class="card-text text-muted">Páginas</div>
+                                    <div class="card-text text-muted">Dimensiones</div>
+                                    <div class="card-text text-muted">Idioma</div>
+                                    <div class="card-text text-muted">ISBN</div>
+                                    <div class="card-text text-muted">ISBN-10</div>
+                                </div>
+                                <div class="col-9 ps-4">
+                                    <div class="card-text">{{this.libro.Editorial}}</div>
+                                    <div class="card-text">{{this.libro.Edicion}}</div>
+                                    <div class="card-text">{{this.libro.NumeroPaginas}} </div>
+                                    <div class="card-text">{{this.libro.Dimensiones}}</div>
+                                    <div class="card-text">{{this.libro.Idioma}}</div>
+                                    <div class="card-text">{{this.libro.ISBN10}}</div>
+                                    <div class="card-text">{{this.libro.ISBN13}}</div>
+                                </div>
+                            </div>
+    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="col-4 px-0">
+            <div class="bg-light p-3 border border-1">
+                <div class="container bg-white border border-1 p-2">
+                    <div class="d-flex flex-row-reverse align-items-end w-100">
+                        <h4 class="mx-2">€</h4><h2>{{this.libro.Precio | redondeocantidad:2}}</h2>
+                    </div>
+                    <div class="container px-3">
+                        <div class="row">
+                            <div class="col-4 border border-2 border-primary d-flex align-items-center justify-content-center"><img src="../../../assets/images/iconoMiniBan.png" /></div>
+                            <div class="col-8 border border-2 border-primary border-start-0 d-flex flex-column justify-content-center p-2">
+                                <div class="d-flex justify-content-around"><span class="text-primary"><strong>Envío Gratis</strong><i class="fa-solid fa-circle-info mx-2"></i></span> </div>
+                                <div class="d-flex justify-content-around"><span class="text-primary"><small>al comprar este libro</small></span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center py-3 px-1">
+                        <a class="btn btn-primary w-100 p-2" style="border-radius: 0px"><i class="fa-solid fa-cart-shopping pe-2"></i><strong> Comprar / Recoger</strong></a>
+                    </div>
+                    <div class="d-flex flex-row justify-content-between px-1">
+                        <a class="btn btn-outline-primary p-2 flex-fill" style="border-radius: 0px"> <small>Agregar a la lista de deseos</small></a>
+                        <div class="btn-group">
+                            <button class="btn btn-outline-primary dropdown-toggle" style="border-radius: 0px" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false"><i class="fa-solid fa-chevron-down"></i></button>
+
+                            <ul class="dropdown-menu dropdown-menu-lg-end">
+
+                            <!--Hacer if para que si no esta logueado y se hace click redirija al usuario a el login-->
+
+                             @if(clientLogged != null) {
+                                @for (list of (clientLists$ |async); track list.idList) {
+                                    @if(list != null){
+                                    <li>
+                                     <button class="dropdown-item btn btn-outline-primary" (click)="addOrRemoveBook(list?.idList!)">{{list.name}}
+                                      <span *ngIf="listsWithBook().get(list?.idList!)">✔️</span>
+
+                                     </button>
+                                    </li>
+                                     }
+                                    }
+                                <li><hr class="dropdown-divider" style="border-top-color:#0d6efd"></li>
+                                <li><button class="dropdown-item btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#crearlistamodal">Agregar a nueva lista</button></li>
+
+                             } @else {
+                                    <li><button class="dropdown-item btn btn-outline-primary" [routerLink]="['/Cliente/Login']">Lista de deseos</button></li>
+                                    <li><hr class="dropdown-divider" style="border-top-color:#0d6efd"></li>
+                                    <li><button class="dropdown-item btn btn-outline-primary" [routerLink]="['/Cliente/Login']">Agregar a nueva lista</button></li>
+                             }
+                               
+                             <!--<li><button class="dropdown-item btn btn-outline-primary">Lista predefinida</button></li>--> 
+                             <!--<li><button class="dropdown-item btn btn-outline-primary">Lista 1...</button></li>--> 
+                             <!--<li><button class="dropdown-item btn btn-outline-primary">Lista 2....</button></li>--> 
+
+                               
+                              </ul>                            
+                        </div>
+                    </div>
+                    <app-modalcrearlista [list]="list" (createList)="sendListForBack()"></app-modalcrearlista>
+                </div>
+            </div>
+        </div>
+
+        <div class="container my-5 py-5 border-0">
+           <div class="row d-flex justify-content-start">
+              <div class="col-md-12 col-lg-12 border-0">
+                 <div class="card text-body border-0 ">
+                   <div class="card-body border-0 pt-2">
+                     <h4 class="mb-0">Comentarios recientes</h4>
+                     <p class="fw-light mb-4 pb-2">Los últimos comentarios de los usuarios</p>
+          
+                      <div class="d-flex flex-start">
+                        <img class="rounded-circle shadow-1-strong me-3"
+                          src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(23).webp" alt="avatar" width="60"
+                          height="60" />
+                        <div>
+                          <h6 class="fw-bold mb-1">Maggie Marsh</h6>
+                          <div class="d-flex align-items-center mb-3">
+                            <p class="mb-0">
+                              7 de marzo del 2021
+                              <span class="badge bg-primary">Pendiente</span>
+                            </p>
+                            <a href="#!" class="link-muted"><i class="fas fa-pencil-alt ms-2"></i></a>
+                            <a href="#!" class="link-muted"><i class="fas fa-redo-alt ms-2"></i></a>
+                            <a href="#!" class="link-muted"><i class="fas fa-heart ms-2"></i></a>
+                          </div>
+                          <p class="mb-0">
+                            Muy buen libro, ahora en mi trabajo me decico gran en parte a Oracle 
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+          
+                    <p class="p-2"></p>          
+          
+                   
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="card ">
+                <div class="card-body bg-light">
+                  <div class="d-flex flex-start w-80 ">
+                    @if (clientLogged == null) {
+                      <img class="rounded-circle shadow-1-strong me-3"
+                      src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(23).webp"  width="60"
+
+                      height="60" />
+                    } @else {
+
+                      <img class="rounded-circle shadow-1-strong me-3"
+                      src="{{clientLogged?.cuenta?.imagenAvatarBASE64}}"  width="60"
+                      height="60" />
+                    }
+             
+                    <div class="w-100">
+                      <h5>Añade un comentario</h5>
+                
+                      <div data-mdb-input-init class="form-outline">
+                        <textarea class="form-control" id="textAreaExample" rows="4"></textarea>
+                        <label class="form-label" for="textAreaExample">Que opinion tienes??</label>
+                      </div>
+                      <div class="d-flex justify-content-center mt-1">
+                   
+                        <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-danger">
+                          Enviar 
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        
+    </div>
+}
+@else {
+    <div class="row">
+        <div class="col"><p>No existe ningun libro con ese ISBN</p></div>
+    </div>
+}
+

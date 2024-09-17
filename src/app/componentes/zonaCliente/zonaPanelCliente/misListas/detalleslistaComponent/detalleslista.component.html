@@ -1,0 +1,73 @@
+<div class="container">
+    <div class="row">
+        <div class="col d-flex flex-row p-3">
+            <h5><strong>{{list?.name}}</strong></h5>
+            <button class="btn btn-light btn-sm" (click)="this.editarLista=true"><i class="fa-solid fa-pen-to-square"></i></button>
+        </div>
+    </div>
+    @if (this.editarLista) {
+        <div class="reg-edit-list">
+            <h3>Editar lista</h3>
+            <form>
+                <div class="m-3">
+                  <label for="nombreLista" class="form-label">Nombre</label>
+                  <input type="email" class="form-control" id="nombreLista" value="{{list?.name}}">
+                </div>
+                
+                <div class="m-3">
+                  <label for="descripcionLista" class="form-label">Descripcion</label>
+                  <textarea class="form-control" id="descripcionLista" value="{{list?.description}}" rows="3"></textarea>
+                </div>
+                
+                <div class="form-check m-3">
+                    <input class="form-check-input" type="radio" name="listaPublica" id="listaPublica" disabled>
+                    <label class="form-check-label" for="listaPublica">
+                      Lista pública
+                      <span class="text-mutted fs-6 text-danger" >La lista debe tener al menos 5 libros y una descripcion amplia (superior a los 100 caracteres).</span>
+                    </label>
+                </div>
+
+                <div class="form-check m-3">
+                    <input class="form-check-input" type="radio" name="listaPrivada" id="listaPrivada" checked>
+                    <label class="form-check-label" for="listaPrivada">
+                        Lista privada 
+                    </label>
+                </div>
+
+                <div class="m-3">
+                    <button class="btn btn-sm btn-outline-danger" (click)="removeList()">Eliminar lista</button>
+                </div>
+
+                <div class="d-flex flex-row justify-content-end">
+                    <button type="submit" class="btn btn-primary btn-sm m-3">Guardar cambios</button>
+                    <button type="button" class="btn btn-ligth btn-sm m-3" (click)="this.editarLista=false">Cancelar</button>
+                </div>
+              </form>
+        </div>
+    } 
+    @else {
+        <div class="row">
+            <div class="col">
+                <p>{{list?.description}}.</p>
+            </div>
+        </div>
+    
+        <div class="row">
+            <div class="col">
+                <h6><span class="text-mutted"><img src="{{list?.image}}">{{list?.type}}</span></h6>
+            </div>
+        </div>
+        <hr>
+    
+    }
+
+
+    <!-- lista de libros de la lista...-->
+
+    @for (book of list?.books; track idList) {
+        <app-minilibrolista [bookDetails]="book" ></app-minilibrolista>
+
+    }
+    
+
+</div>

@@ -1,0 +1,9 @@
+ul.dropdown-menu  {    
+        border-radius: 0px;
+        border-color: #0d6efd;
+}
+
+a.dropdown-item {
+    font-size: 0.8em;
+    color: #0d6efd  
+}

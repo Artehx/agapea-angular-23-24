@@ -1,0 +1,50 @@
+<div class="card">
+    <div class="card-header d-flex flex-row justify-content-between">
+        <button type="button"><i class="fa-solid fa-arrows-up-down"></i></button>
+        <button type="button" class="btn-close" aria-label="Close"></button>
+    </div>
+
+    <div class="card-body">
+        <div class="card mb-3">
+            <div class="row g-0">
+                <div class="col-md-3">
+                    <img src="{{bookDetails.ImagenLibroBASE64}}" class="img-fluid rounded-start" alt="...">
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card-body">
+                    <h5 class="card-title"><a>{{bookDetails.Titulo}}</a></h5>
+                    <p class="card-text"><span style="color:lightgrey">
+                    @for (autor of bookDetails.Autores; track $index) {
+                      {{autor}}    
+                    }</span></p>
+                    <p class="card-text"><small class="text-body-secondary">{{bookDetails.Editorial}}</small></p>
+                    <button type="button" class="btn btn-lnk btn-sm" (click)="this.showTextComment=true">Escribir un comentario privado</button>
+                    @if (this.showTextComment) {
+                        <hr>
+                        <div class="m-3">
+                            <textarea class="card-text form-control" rows="3" aria-describedby="notacomment"></textarea>
+                            <div class="form-text" id="notacomment"><small><span class="text-mutted"></span>Numero maximo de caracteres: 250</small></div>
+                            <div class="d-flex flex-row justify-content-end">
+                                <button class="btn btn-sm btn-primary m-3" style="border-radius: 0px;">Guardar comentario</button> 
+                                <button class="btn btn-sm btn-secondary m-3" style="border-radius: 0px;" (click)="this.showTextComment=false">Cancelar</button> 
+                            </div>
+                        </div>
+                    }
+                    @else {
+                        <p class="card-text" style="background-color: #e9ecef;">...aqui iria el comentario privado del libro si lo hubiera...</p>
+                    }
+                    </div>
+
+                </div>
+
+                <div class="col-md-3 d-flex flex-column justify-content-start">
+                        <h3><strong>0 €</strong></h3>
+                        <span style="background-color:#f85c6b; color:#fff; font-size: .7rem; font-weight: 700; border-radius: 1px; width: 70px; padding-right: 4px; padding-left: 4px;">1 A 7 dias</span>
+                        <button class="btn btn-primary m-3"><i class="fa-solid fa-cart-shopping"></i> Comprar / Recoger</button>
+                </div>
+            </div>
+          </div>
+    </div>
+  </div>
+
