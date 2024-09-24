@@ -11,6 +11,7 @@ import { IPedido } from '../modelos/pedido';
 import { ICliente } from '../modelos/cliente';
 import { IDireccion } from '../modelos/direccion';
 import { IList } from '../modelos/list';
+import { IComment } from '../modelos/comment';
 
 @Injectable({
   providedIn: 'root'
@@ -149,6 +150,29 @@ public toggleBookInList(idList: string, isbn13: string, email: string): Observab
 
     )
 
+  }
+
+  public saveComment(comment : IComment ) : Observable<IRestMessage> {
+    console.log('Enviando...')
+    return this._httpclient.post<IRestMessage>(
+      "http://localhost:3000/api/Cliente/SaveComment",
+      {comment: comment},
+      {headers: new HttpHeaders({'Content-Type':'application/json'})}
+    )
+
+  }
+
+  public getAllComments(isbn : string) : Observable<IComment[]> {
+   
+    return this._httpclient.get<IComment[]>(
+           `http://localhost:3000/api/Cliente/GetAllComments?isbn=${isbn}`,
+           
+    )
+
+  }
+
+  getUserProfileImage(userEmail: string): Observable<{ imagenAvatarBASE64: string }> {
+    return this._httpclient.get<{ imagenAvatarBASE64: string }>(`http://localhost:3000/api/Cliente/GetProfileImage?userEmail=${userEmail}`);
   }
 
 

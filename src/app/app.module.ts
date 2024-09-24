@@ -42,7 +42,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
   declarations: [ //<------ array con defs. de componentes, directivas y pipes disponibles para toda la aplicacion
     AppComponent,
     PanelTiendaComponent,
-    PanelclienteComponent
+    PanelclienteComponent,
+
+   
+    
   ],
   imports: [ //<------------ array con modulos secundiarios q tu aplicacion va a usar
     BrowserModule,

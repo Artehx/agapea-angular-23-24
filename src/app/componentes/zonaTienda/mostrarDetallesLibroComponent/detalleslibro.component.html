@@ -117,29 +117,30 @@
                      <h4 class="mb-0">Comentarios recientes</h4>
                      <p class="fw-light mb-4 pb-2">Los últimos comentarios de los usuarios</p>
           
-                      <div class="d-flex flex-start">
-                        <img class="rounded-circle shadow-1-strong me-3"
-                          src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(23).webp" alt="avatar" width="60"
-                          height="60" />
-                        <div>
-                          <h6 class="fw-bold mb-1">Maggie Marsh</h6>
-                          <div class="d-flex align-items-center mb-3">
-                            <p class="mb-0">
-                              7 de marzo del 2021
-                              <span class="badge bg-primary">Pendiente</span>
-                            </p>
-                            <a href="#!" class="link-muted"><i class="fas fa-pencil-alt ms-2"></i></a>
-                            <a href="#!" class="link-muted"><i class="fas fa-redo-alt ms-2"></i></a>
-                            <a href="#!" class="link-muted"><i class="fas fa-heart ms-2"></i></a>
-                          </div>
-                          <p class="mb-0">
-                            Muy buen libro, ahora en mi trabajo me decico gran en parte a Oracle 
-                          </p>
-                        </div>
+                      <div class="">
+                      
+                          <!--COMPONENTE COMENTARIO-->
+
+                          @if (this.comments().length > 0) {
+                            @for (comment of this.comments(); track comment.id) {
+                             
+                              <app-comentario [comentario]="comment"/>
+                            }
+
+                          } @else {
+
+                            <div class="d-flex justify-content-center align-items-center w-100">
+                              <div class="alert alert-info text-center w-100" role="alert">
+                                No hay comentarios ...
+                              </div>
+                            </div>
+
+                          }
+
+                      
                       </div>
                     </div>
-          
-                    <p class="p-2"></p>          
+              
           
                    
                   </div>
@@ -166,12 +167,12 @@
                       <h5>Añade un comentario</h5>
                 
                       <div data-mdb-input-init class="form-outline">
-                        <textarea class="form-control" id="textAreaExample" rows="4"></textarea>
+                        <textarea class="form-control" id="textAreaExample" rows="4" [(ngModel)]="comment.comment!"></textarea>
                         <label class="form-label" for="textAreaExample">Que opinion tienes??</label>
                       </div>
                       <div class="d-flex justify-content-center mt-1">
                    
-                        <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-danger">
+                        <button (click)="saveCommentForBack()" type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-danger">
                           Enviar 
                         </button>
                       </div>

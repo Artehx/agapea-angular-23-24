@@ -6,8 +6,10 @@ export interface IComment {
     comment: string;
     state: string;
     emailClient: string;
-    user: string;
     date: Date;
-    imagenAvatarBASE64?:string;
+    imagenAvatarBASE64?: String;
+    login?:string;
+    isbn13?: string;
+
 
 }

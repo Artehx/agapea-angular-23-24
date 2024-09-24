@@ -8,8 +8,11 @@ import { MI_TOKEN_SERVICIOSTORAGE } from '../../../servicios/injectiontokenstora
 import { IStorageService } from '../../../modelos/interfaceservicios';
 import { ICliente } from '../../../modelos/cliente';
 import { IRestMessage } from '../../../modelos/restmessage';
-import { of } from 'rxjs';
+import { of, forkJoin, map } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { IComment } from '../../../modelos/comment';
+import { signalCommentsService } from '../../../servicios/signalComments.service';
+import { ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-detalleslibro',
@@ -25,8 +28,22 @@ export class DetalleslibroComponent implements OnInit, OnDestroy {
   
   public clientLogged: ICliente | null = null;
   public clientLists$!: Observable<Array<IList>>;
+  
 
   public listsWithBook = signal<Map<string, boolean>>(new Map());
+
+  public comments = signal<Array<IComment>>([]);
+
+  public comment : IComment = {
+
+    id: window.crypto.randomUUID(),
+    comment: '',
+    date: new Date(Date.now()),
+    emailClient: '',
+    state: 'Pendiente',
+    isbn13: ''
+    
+  }
 
   public list: IList = {
     idList: window.crypto.randomUUID(),
@@ -39,26 +56,57 @@ export class DetalleslibroComponent implements OnInit, OnDestroy {
 };
 
   constructor(private restSvc:RestnodeService, private activatedRoute:ActivatedRoute,  @Inject(MI_TOKEN_SERVICIOSTORAGE) private storageSvc : IStorageService,
-              private toastr: ToastrService){
+              private toastr: ToastrService, private signalStorage : signalCommentsService){
     this.libro$=this.activatedRoute.paramMap.pipe(concatMap((params:ParamMap)=>{ return this.restSvc.RecuperarUnLibro(params.get('isbn')||'') }) );
+ 
   }
+
+
+
   ngOnInit(): void {
     
-    this.clientLogged! = this.storageSvc.RecuperarClientValue();
-    this.clientLists$ = this.storageSvc.RecuperarClientLists();
-    this.list.emailClient = this.clientLogged.cuenta.email;
-
-
     this.libroSubscription = this.libro$.subscribe({
       next: (libro) => {
         this.libro = libro;
-        this.updateListsWithBook();
+        console.log('El libro es -> ', libro);
+        this.comment.isbn13 = this.libro?.ISBN13;
+
+        this.clientLogged! = this.storageSvc.RecuperarClientValue();
+
+        if(this.clientLogged != null){
+          
+          this.clientLists$ = this.storageSvc.RecuperarClientLists();
+          this.list.emailClient = this.clientLogged.cuenta.email;
+          this.comment.emailClient = this.clientLogged.cuenta.email;
+          this.updateListsWithBook();
+    
+         
+    
+        } else {
+    
+          console.log('El libro (else) ', this.libro?.ISBN13)
+          this.getComments(this.libro!.ISBN13);
+
+
+        }
+
+
       },
+
+      
 
       error: (err) => {
         console.log('Error al obtener el libro: ', err)
       }
     })
+
+  
+    
+    
+
+
+    
+
      
 
 
@@ -119,8 +167,76 @@ export class DetalleslibroComponent implements OnInit, OnDestroy {
        }
 
     })
+  }
+
+  getComments(isbn13 : string) {
+
+    //console.log('Recupero comentarios del libro ', isbn13);
+  
+    this.restSvc.getAllComments(isbn13).subscribe( {
+
+      next: (comments: IComment[]) => {
+        
+          console.log('Comentarios en el front -> ', comments);
+          this.signalStorage.SaveComments(comments); 
+          
+          this.comments.set(comments);
+          console.log('La señal -> ', this.comments())
+
+          //Obtener imagenes 
+          const profileImageRequests = this.comments().map(comment => 
+            this.restSvc.getUserProfileImage(comment.emailClient)
+          );
+
+          forkJoin(profileImageRequests).subscribe(profileImages => {
+            profileImages.forEach((image, i) => {
+
+                console.log('Imagenes -> ', image);
+                this.comments()[i].imagenAvatarBASE64 = image.imagenAvatarBASE64;
+
+                console.log(this.comments()[i].imagenAvatarBASE64)
+
+                console.log('Señal -> ', this.comments());
+
+            });
+            this.comments.set(comments);
+          })
+
+      }
+
+    })
+
+    
 
 
+
+  }
+
+  saveCommentForBack() {
+    
+    
+
+     console.log('Entra por la puerta grande')
+    this.restSvc.saveComment(this.comment).subscribe({
+     next: (response : IRestMessage) => {
+      console.log(response);
+      if(response.codigo === 0){
+         
+        //Con Subject (RAM)
+        //this.storageSvc.AlmacenarListas(response.otrosdatos);
+        this.signalStorage.SaveComments(response.otrosdatos);
+
+        //this.clientLists$ = of(response.otrosdatos);
+
+       } else {
+      
+        //Mostrar mensaje de error 
+
+       }
+
+     }
+
+    })
 
   }
 

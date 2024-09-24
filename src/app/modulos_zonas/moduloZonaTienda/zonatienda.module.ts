@@ -14,6 +14,7 @@ import { DatosfacturacionComponent } from '../../componentes/zonaTienda/datosFac
 import { DatospagoComponent } from '../../componentes/zonaTienda/datosPagoComponent/datospago.component';
 import { SharedmoduleModule } from '../SHARED_MODULE/sharedmodule.module';
 import { FormsModule } from '@angular/forms';
+import { ComentarioComponent } from '../../componentes/zonaTienda/comentarioComponent/comentario.component';
 
 //-------------------- pipes del modulo de zona Tienda --------------------------------
 
@@ -29,7 +30,7 @@ import { FormsModule } from '@angular/forms';
     DatospagoComponent,
     LibrosComponent,
     DetalleslibroComponent,
-    
+    ComentarioComponent
 
   ],
   imports: [

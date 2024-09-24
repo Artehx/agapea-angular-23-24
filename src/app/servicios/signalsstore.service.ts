@@ -3,6 +3,7 @@ import { IStorageService } from '../modelos/interfaceservicios';
 import { Observable } from 'rxjs';
 import { ICliente } from '../modelos/cliente';
 import { ILibro } from '../modelos/libro';
+import { IList } from '../modelos/list';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,18 @@ export class SignalsstoreService implements IStorageService{
   private itemsSignal=signal<Array<{libroElemento:ILibro, cantidadElemento:number}>>([]);
  
   constructor() { }
+  RecuperarClientValue(): ICliente {
+    throw new Error('Method not implemented.');
+  }
+  RecuperarClientLists(): Observable<Array<IList>> {
+    throw new Error('Method not implemented.');
+  }
+  RecuperarClienteList(idlist: string): IList | undefined {
+    throw new Error('Method not implemented.');
+  }
+  AlmacenarListas(newlists: IList[]): void {
+    throw new Error('Method not implemented.');
+  }
   AlmacenarDatosCliente(datoscliente: ICliente): void {
     this.clienteSignal.update(()=> datoscliente);
   }
