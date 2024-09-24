@@ -75,11 +75,12 @@ export class DetalleslibroComponent implements OnInit, OnDestroy {
 
         if(this.clientLogged != null){
           
-          this.clientLists$ = this.storageSvc.RecuperarClientLists();
           this.list.emailClient = this.clientLogged.cuenta.email;
           this.comment.emailClient = this.clientLogged.cuenta.email;
+          
+          this.getCommentsUser(this.libro!.ISBN13, this.clientLogged.cuenta.email);
+          this.clientLists$ = this.storageSvc.RecuperarClientLists();
           this.updateListsWithBook();
-    
          
     
         } else {
@@ -99,15 +100,7 @@ export class DetalleslibroComponent implements OnInit, OnDestroy {
         console.log('Error al obtener el libro: ', err)
       }
     })
-
-  
     
-    
-
-
-    
-
-     
 
 
   }
@@ -169,6 +162,32 @@ export class DetalleslibroComponent implements OnInit, OnDestroy {
     })
   }
 
+  getDataUser(comments: IComment[]) {
+
+    //Obtener imagenes 
+    const profileImageRequests = this.comments().map(comment => 
+      this.restSvc.getUserProfileImage(comment.emailClient)
+    );
+
+    forkJoin(profileImageRequests).subscribe(profileImages => {
+      profileImages.forEach((data, i) => {
+
+          
+
+          console.log('Imagenes -> ', data);
+          this.comments()[i].imagenAvatarBASE64 = data.imagenAvatarBASE64;
+          this.comments()[i].login = data.usuario;
+
+          console.log(this.comments()[i].imagenAvatarBASE64)
+
+          console.log('Señal -> ', this.comments());
+
+      });
+      this.comments.set(comments);
+    })
+
+  }
+
   getComments(isbn13 : string) {
 
     //console.log('Recupero comentarios del libro ', isbn13);
@@ -184,24 +203,7 @@ export class DetalleslibroComponent implements OnInit, OnDestroy {
           console.log('La señal -> ', this.comments())
 
           //Obtener imagenes 
-          const profileImageRequests = this.comments().map(comment => 
-            this.restSvc.getUserProfileImage(comment.emailClient)
-          );
-
-          forkJoin(profileImageRequests).subscribe(profileImages => {
-            profileImages.forEach((image, i) => {
-
-                console.log('Imagenes -> ', image);
-                this.comments()[i].imagenAvatarBASE64 = image.imagenAvatarBASE64;
-
-                console.log(this.comments()[i].imagenAvatarBASE64)
-
-                console.log('Señal -> ', this.comments());
-
-            });
-            this.comments.set(comments);
-          })
-
+          this.getDataUser(comments)
       }
 
     })
@@ -212,12 +214,44 @@ export class DetalleslibroComponent implements OnInit, OnDestroy {
 
   }
 
-  saveCommentForBack() {
-    
-    
+  getCommentsUser(isbn13: string, email : string) {
 
-     console.log('Entra por la puerta grande')
-    this.restSvc.saveComment(this.comment).subscribe({
+    this.restSvc.getAllCommentsUser(isbn13, email).subscribe( {
+
+      next: (response) =>  {
+
+        console.log('Respuesta -> ', response);
+
+        const commentUser = response.userComment;
+        const commentList = response.reviewdComments;
+
+        console.log('Comentarios en el front -> ', commentList);
+
+        if(commentUser) {
+
+          this.comments.set([...commentList, commentUser]);
+
+        } else {
+
+          this.comments.set(commentList);
+        }
+
+        this.getDataUser(this.comments())
+
+      },
+
+      error: (err) => {
+        console.log('Error al obtener los comentarios: ', err)
+      }
+
+    })
+
+  }
+
+  saveCommentForBack() {
+
+    console.log('Entra por la puerta grande')
+     this.restSvc.saveComment(this.comment).subscribe({
      next: (response : IRestMessage) => {
       console.log(response);
       if(response.codigo === 0){
@@ -225,6 +259,9 @@ export class DetalleslibroComponent implements OnInit, OnDestroy {
         //Con Subject (RAM)
         //this.storageSvc.AlmacenarListas(response.otrosdatos);
         this.signalStorage.SaveComments(response.otrosdatos);
+        this.comments.set(response.otrosdatos);
+        this.getDataUser(this.comments())
+        this.comments.set(response.otrosdatos);
 
         //this.clientLists$ = of(response.otrosdatos);
 

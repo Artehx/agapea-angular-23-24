@@ -1,5 +1,6 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+
 
 //----------------- modulos secundarios hijos del modulo principal de la aplicacion ----------------
  // AppRoutingModule: modulo encargardo de detectar variacion de url en navegador y en funcion de su fich.configuracion:  app-routing.module.ts
@@ -63,7 +64,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
   providers: [
     RestnodeService, //{ provide: RestnodeService, useClass: RestnodeService}
     { provide: MI_TOKEN_SERVICIOSTORAGE, useClass: SubjectstorageService },
-    { provide: HTTP_INTERCEPTORS, useClass: AuthjwtInterceptor , multi:true}
+    { provide: HTTP_INTERCEPTORS, useClass: AuthjwtInterceptor , multi:true},
+  
   ], //<-------- array para definir inyeccion de dependencias de servicios usados por componentes
   bootstrap: [AppComponent]
 })

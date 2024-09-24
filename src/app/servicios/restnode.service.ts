@@ -171,8 +171,14 @@ public toggleBookInList(idList: string, isbn13: string, email: string): Observab
 
   }
 
-  getUserProfileImage(userEmail: string): Observable<{ imagenAvatarBASE64: string }> {
-    return this._httpclient.get<{ imagenAvatarBASE64: string }>(`http://localhost:3000/api/Cliente/GetProfileImage?userEmail=${userEmail}`);
+  public getAllCommentsUser(isbn: string, email: string) : Observable<{ userComment: IComment | null; reviewdComments: IComment[] }> {
+
+    return this._httpclient.get<{userComment: IComment | null; reviewdComments : IComment []}>(`http://localhost:3000/api/Cliente/GetAllCommentsUser?isbn=${isbn}&email=${email}`)
+
+  }
+
+  getUserProfileImage(userEmail: string): Observable<{ imagenAvatarBASE64: string, usuario : string }> {
+    return this._httpclient.get<{ imagenAvatarBASE64: string, usuario : string }>(`http://localhost:3000/api/Cliente/GetProfileImage?userEmail=${userEmail}`);
   }
 
 
