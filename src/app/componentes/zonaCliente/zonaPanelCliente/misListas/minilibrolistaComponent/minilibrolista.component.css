@@ -2,3 +2,8 @@ button.btn-lnk{
     color:#00679f;
     cursor: pointer;
 }
+
+.cursor-move {
+
+    cursor: move;
+}

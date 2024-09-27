@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { concat, concatMap, Observable } from 'rxjs';
 import { IList } from '../../../../../modelos/list';
@@ -9,12 +9,15 @@ import { ICliente } from '../../../../../modelos/cliente';
 import { IRestMessage } from '../../../../../modelos/restmessage';
 import { ToastrService } from 'ngx-toastr';
 
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { ILibro } from '../../../../../modelos/libro';
+
 @Component({
   selector: 'app-detalleslista',
   templateUrl: './detalleslista.component.html',
   styleUrl: './detalleslista.component.css'
 })
-export class DetalleslistaComponent implements OnInit {
+export class DetalleslistaComponent implements OnInit, OnDestroy {
   public editarLista:boolean=false;
   public list! : IList | undefined;
 
@@ -38,6 +41,40 @@ export class DetalleslistaComponent implements OnInit {
     }
 
   }
+
+  
+  ngOnDestroy(): void {
+    
+    this.restService.changeOrderList(this.list!, this.clienteLogged?.cuenta.email!).subscribe( {
+      
+      next:(response : IRestMessage) => {
+
+        console.log('Salió en el front -> ', response)
+
+        if(response.codigo == 0){
+
+          console.log('Salio bieen')
+        }
+
+      },
+
+      error: (error: any) => {
+      
+        console.log('Algo salio mal -> ', error)
+  
+      }
+
+    })
+
+
+  }
+
+  
+  drop(event: CdkDragDrop<ILibro[]>) : void {
+    moveItemInArray(this.list?.books!, event.previousIndex, event.currentIndex);
+  }
+
+
   ngOnInit(): void {
     this.clienteLogged! = this.storageSvc.RecuperarClientValue();
     

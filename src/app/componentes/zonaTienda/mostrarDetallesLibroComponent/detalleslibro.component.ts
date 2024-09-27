@@ -72,20 +72,24 @@ export class DetalleslibroComponent implements OnInit, OnDestroy {
         this.comment.isbn13 = this.libro?.ISBN13;
 
         this.clientLogged! = this.storageSvc.RecuperarClientValue();
-
+        
         if(this.clientLogged != null){
           
           this.list.emailClient = this.clientLogged.cuenta.email;
           this.comment.emailClient = this.clientLogged.cuenta.email;
           
+          console.log('Recupera los comentarios del usuario ')
           this.getCommentsUser(this.libro!.ISBN13, this.clientLogged.cuenta.email);
+          
           this.clientLists$ = this.storageSvc.RecuperarClientLists();
+          
           this.updateListsWithBook();
          
     
         } else {
     
-          console.log('El libro (else) ', this.libro?.ISBN13)
+          //console.log('El libro (else) ', this.libro?.ISBN13)
+          console.log('Recupero todos los comentarios')
           this.getComments(this.libro!.ISBN13);
 
 
@@ -169,6 +173,9 @@ export class DetalleslibroComponent implements OnInit, OnDestroy {
       this.restSvc.getUserProfileImage(comment.emailClient)
     );
 
+    //Una posible estrategia para optimizar los comentarios 
+    //seria crear un array de ids(o correos) para pedir los datos
+    // de todos los usuarios y devolverlos todos de una
     forkJoin(profileImageRequests).subscribe(profileImages => {
       profileImages.forEach((data, i) => {
 
@@ -236,6 +243,8 @@ export class DetalleslibroComponent implements OnInit, OnDestroy {
           this.comments.set(commentList);
         }
 
+        console.log('Comentarios despues -> ', this.comments())
+
         this.getDataUser(this.comments())
 
       },
@@ -248,9 +257,40 @@ export class DetalleslibroComponent implements OnInit, OnDestroy {
 
   }
 
+  checkComment() {
+
+   return this.clientLogged 
+          ? this.oneCommentForBook(this.clientLogged.cuenta.email)
+          ? this.saveCommentForBack()
+          : this.toastr.warning('Ya has comentado este libro')
+         : this.toastr.warning('Si quieres comentar inicia sesión'); 
+
+  }
+
+  oneCommentForBook(email : string) : boolean{
+
+    console.log('Email a buscar -> ', email)
+
+    let comentario : IComment | undefined = this.comments().find(com => com.emailClient === email);
+
+    console.log('Se encontro comentario -> ', comentario)
+
+    if(comentario != undefined) {
+ 
+     return false;
+ 
+ 
+    } else {
+ 
+     return true;
+    }
+
+   }
+
   saveCommentForBack() {
 
     console.log('Entra por la puerta grande')
+
      this.restSvc.saveComment(this.comment).subscribe({
      next: (response : IRestMessage) => {
       console.log(response);
@@ -259,9 +299,17 @@ export class DetalleslibroComponent implements OnInit, OnDestroy {
         //Con Subject (RAM)
         //this.storageSvc.AlmacenarListas(response.otrosdatos);
         this.signalStorage.SaveComments(response.otrosdatos);
-        this.comments.set(response.otrosdatos);
+        
+        this.comment.comment = "";
+
+        const updatedComments : IComment[] = 
+        this.orderComments(response.otrosdatos, this.clientLogged?.cuenta.email!) 
+         
+        //const updatedComments = [response.otrosdatos, ...this.comments()]
+        
+        this.comments.set(updatedComments);
         this.getDataUser(this.comments())
-        this.comments.set(response.otrosdatos);
+        this.comments.set(updatedComments);
 
         //this.clientLists$ = of(response.otrosdatos);
 
@@ -276,6 +324,19 @@ export class DetalleslibroComponent implements OnInit, OnDestroy {
     })
 
   }
+
+  orderComments(comments : IComment[], email : string) : IComment[] {
+
+     const userComment = comments.filter(com => com.emailClient === email);
+     
+     const otherComments = comments.filter(com => com.emailClient !== email);
+
+     return [...otherComments, ...userComment];
+
+
+  }
+
+
 
   sendListForBack(){ 
   

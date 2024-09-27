@@ -1,7 +1,7 @@
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-
+import { DragDropModule } from '@angular/cdk/drag-drop';
 //----------------- modulos secundarios hijos del modulo principal de la aplicacion ----------------
  // AppRoutingModule: modulo encargardo de detectar variacion de url en navegador y en funcion de su fich.configuracion:  app-routing.module.ts
  // carga un componente u otro
@@ -38,6 +38,7 @@ import { AuthjwtInterceptor } from './servicios_INTERCEPTORS/authjwt.interceptor
 
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 @NgModule({
   declarations: [ //<------ array con defs. de componentes, directivas y pipes disponibles para toda la aplicacion
@@ -58,6 +59,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     SharedmoduleModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    DragDropModule,
     ToastrModule.forRoot()
     
   ],
@@ -65,6 +67,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     RestnodeService, //{ provide: RestnodeService, useClass: RestnodeService}
     { provide: MI_TOKEN_SERVICIOSTORAGE, useClass: SubjectstorageService },
     { provide: HTTP_INTERCEPTORS, useClass: AuthjwtInterceptor , multi:true},
+    provideAnimationsAsync(),
   
   ], //<-------- array para definir inyeccion de dependencias de servicios usados por componentes
   bootstrap: [AppComponent]

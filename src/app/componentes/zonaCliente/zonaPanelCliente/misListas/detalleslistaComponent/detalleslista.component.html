@@ -63,11 +63,15 @@
 
 
     <!-- lista de libros de la lista...-->
-
+    <div cdkDropList (cdkDropListDropped)="drop($event)" class="example-list">
     @for (book of list?.books; track idList) {
-        <app-minilibrolista [bookDetails]="book" ></app-minilibrolista>
-
+        
+    
+       
+        <app-minilibrolista class="example-box" [bookDetails]="book" cdkDrag ></app-minilibrolista>
+        
     }
+    </div>
     
 
 </div>

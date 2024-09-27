@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ZonaclienteRoutingModule } from './zonacliente-routing.module'
-
+import { DragDropModule } from '@angular/cdk/drag-drop';
 //-------------- componentes a importar por este modulo de zona Cliente -------------
 import { LoginComponent} from '../../componentes/zonaCliente/loginComponent/login.component' 
 import { RegistroComponent } from '../../componentes/zonaCliente/registroComponent/registro.component' 
@@ -41,7 +41,8 @@ import { FormsModule } from '@angular/forms';
     CommonModule,
     SharedmoduleModule,
     ZonaclienteRoutingModule,
-    FormsModule
+    FormsModule,
+    DragDropModule
   ]
 })
 export class ZonaclienteModule { }

@@ -104,6 +104,8 @@ export class SubjectstorageService implements IStorageService{
 
     const clientData = this._clienteSubject$.value;
 
+    console.log('Listas en el subject -> ', clientData?.lists);
+
     const listsObservable : Array<IList> = clientData?.lists  ?? [];
 
     return of(listsObservable);

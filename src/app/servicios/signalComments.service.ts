@@ -13,11 +13,13 @@ export class signalCommentsService {
 
     SaveComments(comments : IComment[]) {
 
+    
         this.bookComments.set(comments);
     }
 
     GetComments() : Array<IComment> {
 
+        
         return this.bookComments();
     }
 
